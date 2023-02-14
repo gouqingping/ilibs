@@ -3,9 +3,6 @@ const INFINITY = 1 / 0;
 const root = typeof global == 'object' && global && global.Object === Object && global ||
     typeof self == 'object' && self && self.Object === Object && self ||
     Function('return this')();
-const Symbol = root.Symbol;
-const symbolProto = Symbol ? Symbol.prototype : undefined,
-    symbolToString = symbolProto ? symbolProto.toString : undefined;
 const maskSrcKey = (function () {
     const coreJsData = root['__core-js_shared__'];
     const uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
