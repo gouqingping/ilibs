@@ -9,4 +9,3 @@
 export * from "./lib/common"
 export * from "./lib/dom"
 export * from "./lib/utils"
-export * from './lib/set';

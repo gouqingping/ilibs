@@ -8,7 +8,7 @@
  */
 import { PinYin } from "./PinYin";
 import { isType, capitalUpperCase, isArray, isObject, isString, isNumber } from './common';
-let Sets = Set as any;
+export * from './set';
 export interface AnyObject { [key: string]: any }
 
 /**
