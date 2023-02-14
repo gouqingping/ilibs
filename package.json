@@ -1,6 +1,6 @@
 {
   "name": "ilibs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "前端基础工具方法",
   "main": "index.js",
   "dependencies": {
@@ -40,5 +40,13 @@
     "email": "gouqingping@yahoo.com",
     "github": "https://github.com/gouqingping"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gouqingping/ilibs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gouqingping/ilibs/issues"
+  },
+  "homepage": "https://github.com/gouqingping/ilibs#readme",
   "license": "ISC"
 }
