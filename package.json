@@ -1,0 +1,44 @@
+{
+  "name": "ilibs",
+  "version": "1.0.5",
+  "description": "前端基础工具方法",
+  "main": "index.js",
+  "dependencies": {
+    "lodash.set": "^4.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "babel-loader": "^8.2.3",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.6.0",
+    "happypack": "^5.0.1",
+    "html-loader": "^3.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "rollup": "^2.70.2",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.7",
+    "typescript": "^4.7.4",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "scripts": {
+    "dev": "cross-env webpack serve --inline --progress --config build/dev.js --hot",
+    "build:pro": "tsc && npm run publish",
+    "publish": "node build/publish.js"
+  },
+  "keywords": [],
+  "author": {
+    "name": "GGos",
+    "email": "gouqingping@yahoo.com",
+    "github": "https://github.com/gouqingping"
+  },
+  "license": "ISC"
+}
