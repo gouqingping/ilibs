@@ -1,6 +1,6 @@
 {
   "name": "ilibs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "前端基础工具方法",
   "main": "index.js",
   "dependencies": {
