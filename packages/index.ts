@@ -6,6 +6,7 @@
  * @LastEditors  : GGos
  * @LastEditTime : 2022-10-08 14:22:44
  */
-export * from "./lib/common"
-export * from "./lib/dom"
-export * from "./lib/utils"
+export * from "./libs"
+export * from "./element"
+export * from "./object"
+export * from "./file"

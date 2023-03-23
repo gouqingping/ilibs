@@ -6,8 +6,7 @@
  * @LastEditors  : GGos
  * @LastEditTime : 2022-10-10 15:21:30
  */
-import { isArray, isFunction, isObject, isString } from "./common";
-import { AnyObject, each, objectEach } from "./utils";
+import { isArray, isFunction, isObject, isString, AnyObject, each, objectEach } from "../libs";
 const Dom: AnyObject = {};
 const win: any = window || globalThis;
 export type VNode = {

@@ -16,8 +16,9 @@
 		"lib": ["esnext", "dom"],
 		"baseUrl": "./packages",
 		// "types": [ "node"],
+
 		"paths": {},
-		"outDir": "lib"
+		"outDir": "./type"
 	},
 	"include": ["packages"],
 	"exclude": ["node_modules", "dist", "src"]

@@ -399,7 +399,7 @@ console.log(isExistChild({ a: 1 })); // false
 | toLowerCamelCase(str)             | 将"xx_xx"字符串转为小驼峰           |
 | toCamelCase(str)                  | 将"xx_xx"字符串转为大驼峰           |
 | filterTag(str)                    | 过滤 html 代码(把<>转换为字符串)    |
-| numberToChinese(num)              | 将阿拉伯数字翻译成中文的大写数字    |
+| convertNumberToUppercase(num)     | 将阿拉伯数字翻译成中文的大写数字    |
 | dateFmt(date,fmt)                 | 时间格式化                          |
 | getPinyin(l1,firstBoolen)         | 汉字转拼音                          |
 | hexToRgb(color,a)                 | 将 hex 表示方式转换为 rgba 表示方式 |
@@ -527,13 +527,13 @@ console.log(filterTag('<div>HTTPS_baidu</div>')); //<div>HTTPS_baidu</div>
 | ---- | ---------------- | ------ | ---- | ------ |
 | str  | 需要转换的字符串 | string | yes  | -      |
 
-### numberToChinese
+### convertNumberToUppercase
 
 将阿拉伯数字翻译成中文的大写数字
 
 ```js
-import { numberToChinese } from 'ilibs';
-console.log(numberToChinese(12312312)); //一仟二百三十一萬二仟三百一十二
+import { convertNumberToUppercase } from 'ilibs';
+console.log(convertNumberToUppercase(12312312)); //一仟二百三十一萬二仟三百一十二
 ```
 
 ##### API

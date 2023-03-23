@@ -1,4 +1,4 @@
-import { setValue, getValue, isDevice } from "../packages";
+import { convertNumberToUppercase } from "../packages";
 const object = {
     a: [{ 'b': { 'c': 1 } }, { 'b2': { 'c': 2 } }],
     b: 1,
@@ -19,13 +19,7 @@ const array = [
     ]
 ]
 
-console.log('Device:', isDevice())
-console.log('old d.1:', getValue(object, 'd.1'))
 
 window.onload = () => {
-    setValue(object, 'd.1', '')
-    console.log('object:', object)
-    console.log('new d.1:', getValue(object, 'd.1'))
-    setValue(array, '2.2', 4)
-    console.log('array:', array)
+    console.log(convertNumberToUppercase(12345))
 }

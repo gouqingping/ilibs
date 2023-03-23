@@ -6,55 +6,45 @@
  * @LastEditors  : GGos
  * @LastEditTime : 2022-10-10 14:18:49
  */
-import { PinYin } from "./PinYin";
-import { isType, capitalUpperCase, isArray, isObject, isString, isNumber } from './common';
-export * from './set';
+import { isType, isArray, isObject, isString, isNumber, isFunction } from './base';
+export * from '../set';
 export interface AnyObject { [key: string]: any }
+export const NUMBERS_UPPERCASE = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+export const MONEY_UNIT = ['', '十', '百', '仟', '萬', '億', '点', ''];
 
-/**
- * @description: 过滤html代码(把<>转换)
- * @param {string} str
- * @return {string}
- * @Date: 2021-09-15 15:03:59
- * @author: Pat
- */
-export const filterTag = (str: string): string => str.replace(/&/ig, '&').replace(/</ig, '<').replace(/>/ig, '>').replace(' ', ' ')
 /**
  * @description: 将阿拉伯数字翻译成中文的大写数字
  * @param {number} num
  * @return {string}
  * @Date: 2021-09-15 15:06:38
- * @author: Pat
+ * @author: g go s
  */
-export function numberToChinese(num: number): string {
-    let AA = new Array('零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十')
-    let BB = new Array('', '十', '百', '仟', '萬', '億', '点', '')
-    let a: any = ('' + num).replace(/(^0*)/g, '').split('.')
-    let k = 0
-    let re = ''
+export function convertNumberToUppercase(num: number): string {
+    const MU = MONEY_UNIT, a: any[] = ('' + num).replace(/(^0*)/g, '').split('.');
+    let k = 0, re = '';
     for (let i = a[0].length - 1; i >= 0; i--) {
         switch (k) {
             case 0:
-                re = BB[7] + re
+                re = MONEY_UNIT[7] + re
                 break
             case 4:
-                if (!new RegExp('0{4}//d{' + (a[0].length - i - 1) + '}$').test(a[0])) re = BB[4] + re;
+                if (!new RegExp('0{4}//d{' + (a[0].length - i - 1) + '}$').test(a[0])) re = MU[4] + re;
                 break
             case 8:
-                re = BB[5] + re
-                BB[7] = BB[5]
+                re = MU[5] + re
+                MU[7] = MU[5]
                 k = 0
                 break
         }
-        if (k % 4 === 2 && a[0].charAt(i + 2) !== 0 && a[0].charAt(i + 1) === 0) re = AA[0] + re;
-        if (a[0].charAt(i) !== 0) re = AA[a[0].charAt(i)] + BB[k % 4] + re;
-        k++
+        if (k % 4 === 2 && a[0].charAt(i + 2) !== 0 && a[0].charAt(i + 1) === 0) re = MU[0] + re;
+        if (a[0].charAt(i) !== 0) re = NUMBERS_UPPERCASE[a[0].charAt(i)] + MU[k % 4] + re;
+        k++;
     }
-    if (a.length > 1) { // 加上小数部分(如果有小数部分)
-        re += BB[6]
-        for (let i = 0; i < a[1].length; i++) re += AA[a[1].charAt(i)];
+    if (a.length > 1) {
+        re += MU[6]
+        for (let i = 0; i < a[1].length; i++) re += NUMBERS_UPPERCASE[a[1].charAt(i)];
     }
-    if (re === '一十') re = '十';
+    if (re === '一十') re = NUMBERS_UPPERCASE[NUMBERS_UPPERCASE.length - 1];
     if (re.match(/^一/) && re.length === 3) re = re.replace('一', '');
     return re
 };
@@ -66,10 +56,9 @@ export function numberToChinese(num: number): string {
  * @author: GGos
  */
 export function h5Resize(downCallback: () => void = () => { }, upCallback: () => void = () => { }) {
-    //当软件键盘弹起会改变当前 window.innerHeight，监听这个值变化 [downCb 当软键盘弹起后，缩回的回调,upCb 当软键盘弹起的回调]
     const clientHeight = window.innerHeight;
-    downCallback = isType(downCallback, 'function') ? downCallback : function () { }
-    upCallback = isType(upCallback, 'function') ? upCallback : function () { }
+    downCallback = isFunction(downCallback) ? downCallback : function () { }
+    upCallback = isFunction(upCallback) ? upCallback : function () { }
     window.addEventListener('resize', () => {
         const height = window.innerHeight;
         if (height === clientHeight) downCallback();
@@ -77,75 +66,6 @@ export function h5Resize(downCallback: () => void = () => { }, upCallback: () =>
     });
 }
 
-/**
- * @description: 时间格式化
- * @param {any} date 时间
- * @param {string} fmt 格式
- * @return {string}
- * @Date: 2021-02-01 11:11:33
- * @author: Pat
- */
-export function dateFmt(date: any = new Date(), fmt: string = "YYYY/mm/dd HH:MM:SS"): string {
-    if (!date) return date;
-    let ret: any;
-    if (isType(date, ["string", "number"])) { date = new Date(date) };
-    const opt: AnyObject = {
-        "Y+": date.getFullYear().toString(),        // 年
-        "m+": (date.getMonth() + 1).toString(),     // 月
-        "d+": date.getDate().toString(),            // 日
-        "H+": date.getHours().toString(),           // 时
-        "M+": date.getMinutes().toString(),         // 分
-        "S+": date.getSeconds().toString(),          // 秒
-        "W+": date.getDay().toString(),            // 周
-    };
-    for (let k in opt) {
-        ret = new RegExp("(" + k + ")").exec(fmt);
-        if (ret) {
-            fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
-        };
-    };
-    return fmt;
-}
-/**
- * @description: 汉字转拼音
- * @param {string} l1 指定中文字符串
- * @param {boolean} firstBoolen 
- * @return {string}
- * @Date: 2021-02-01 11:20:37
- * @author: Pat
- */
-export function getPinyin(l1: string, firstBoolen: boolean = true): string {
-    if (!l1 || !isType(l1, 'string')) return l1;
-    let l2 = l1.length, I1 = "", reg = new RegExp('[a-zA-Z0-9\- ]');
-    // 在对象中搜索
-    const arraySearch = (l1s: string, ucfirst: Function | boolean | any) => {
-        for (let name in PinYin) {
-            if (PinYin[name].indexOf(l1s) != -1) {
-                if (ucfirst && isType(ucfirst, 'function')) {
-                    return ucfirst(name);
-                } else {
-                    return name
-                }
-            }
-        }
-        return false;
-    };
-    for (let i = 0; i < l2; i++) {
-        let val = l1.substr(i, 1);
-        let name = arraySearch(val, firstBoolen ? capitalUpperCase : firstBoolen);
-        if (reg.test(val)) {
-            I1 += val;
-        } else if (name !== false) {
-            I1 += name;
-        }
-
-    }
-    I1 = I1.replace(/ /g, '-');
-    while (I1.indexOf('--') > 0) {
-        I1 = I1.replace('--', '-');
-    }
-    return I1;
-}
 /**
  * @description: 根据分辨率不同显示不同字体大小
  * @param {number} def 值
@@ -160,170 +80,6 @@ export function fontSize(def: number = 0, maxWidth: number = 1920): number {
         document.body.clientWidth;
     if (!clientWidth) return 0;
     return def * (clientWidth / maxWidth);
-};
-/**
- * @description: 将hex表示方式转换为rgb表示方式
- * @param {string} sColor hex 色值
- * @param {string} a 转换结束的透明度，默认1
- * @return {string}
- * @Date: 2021-02-01 11:25:00
- * @author: Pat
- */
-export function hexToRgb(sColor: string, a: string | number = 1): string {
-    if (!sColor || !isType(sColor, 'string')) return sColor;
-    let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
-    //处理六位的颜色值
-    let sColorChange: any[] = [];
-    sColor = sColor.toLowerCase();
-    if (isHex(sColor)) {
-        if (sColor.length === 4) {
-            let sColorNew = "#";
-            for (let i = 1; i < 4; i += 1) {
-                sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-            }
-            sColor = sColorNew;
-        }
-        for (let i = 1; i < 7; i += 2) {
-            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-        }
-    } else {
-        if (isRgb(sColor)) {
-            let matcgColor: any = sColor.match(/\((.+)\)/g);
-            matcgColor = matcgColor.length < 0 ? "(0,0,0)" : matcgColor[0];
-            sColorChange = matcgColor.replace(/\(|\)/g, '').split(',');
-        } else {
-            return sColor
-        }
-    }
-    const [r, g, b] = sColorChange, rgb = a ? `rgba(${r}, ${g}, ${b},${a})` : `rgb(${r}, ${g}, ${b})`;
-    return rgb.replace(/\s+/g, "");
-};
-/**
- * @description: 将rgb表示方式转换为hex表示方式
- * @param {string} rgb rgb 色值
- * @return {string}
- * @Date: 2021-02-01 11:27:39
- * @author: Pat
- */
-export function rgbToHex(rgb: string): string {
-    if (!rgb || !isType(rgb, 'string')) return rgb;
-    let _this = rgb;
-    if (isRgb(_this)) {
-        let array = _this.split(","), strHex = "#";
-        //不符合rgb或rgb规则直接return
-        if (array.length < 3) { return _this };
-        for (let i = 0, color: any; color = array[i++];) {
-            if (i < 4) {
-                //前三位转换成16进制
-                color = parseInt(color.replace(/[^\d]/gi, ''), 10).toString(16);
-                strHex += color.length == 1 ? "0" + color : color;
-            } else {
-                //rgba的透明度转换成16进制
-                color = color.replace(')', '');
-                let int: any = color * 255;
-                let colorA = parseInt(int);
-                let colorAHex = colorA.toString(16);
-                strHex += colorAHex;
-            }
-        }
-        return strHex.toUpperCase();
-    }
-    return _this;
-}
-
-/**
- * @description: 验证是否为hex颜色有效值
- * @param {string} color
- * @Date: 2021-07-29 15:30:48
- * @author: Pat
- */
-export function isHex(color: string): boolean {
-    return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)
-}
-
-/**
- * @description: 验证是否为rgb颜色有效值
- * @param {string} color
- * @Date: 2021-07-29 15:30:48
- * @author: Pat
- */
-export function isRgb(color: string): boolean {
-    let rgb = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i
-    let rgba = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i
-    return rgb.test(color) || rgba.test(color);
-}
-/**
- * @description: 验证是否为颜色有效值
- * @param {string} color
- * @Date: 2021-07-29 15:30:48
- * @author: Pat
- */
-export function isColor(color: string): boolean {
-    return isHex(color) || isRgb(color)
-}
-/**
- * @description: 从查询字符串中获取参数
- * @param {string} url getQueryParams("/user?name=Orkhan&age=30")
- * @return {AnyObject} { name: 'Orkhan', age: '30' }
- * @Date: 2021-02-01 11:36:59
- * @author: Pat
- */
-export function getUrlQuery(url: string | any, split?: string): AnyObject {
-    if (!url || url.indexOf("?") == -1) return {};
-    split && (url = url.includes(split) ? url.split(split)[0] : url);
-    return url.match(/([^?=&]+)(=([^&]*))/g).reduce((total: AnyObject, crr: string) => {
-        const [key, value] = crr.split("=");
-        total[key] = value;
-        return total;
-    }, {});
-}
-/**
- * @description: 从路径中获取参数
- * @param {string} path 路径符串
- * @param {string} pathMap 需要获取参数字符串
- * @param {AnyObject} serializer 
- * @return {AnyObject} getPathParams("/app/products/123", "/app/:page/:id"); // { page: 'products', id: '123' }
- *                    getPathParams("/items/2/id/8583212", "/items/:category/id/:id", {category: v => ['Car', 'Mobile', 'Home'][v],id: v => +v}); // { category: 'Home', id: 8583212 }
- * @Date: 2021-02-01 11:40:49
- * @author: Pat
- */
-export function getPathParams(path: string, pathMap: string, serializer: AnyObject | null | undefined = null): AnyObject {
-    if (!path || !pathMap) return {};
-    let splitPath: string[] = path.split("/"),
-        splitPathMap: string[] = pathMap.split("/");
-    return splitPathMap.reduce((acc: AnyObject, crr: any, i: number) => {
-        if (crr[0] === ":") {
-            const param = crr.substr(1);
-            acc[param] = serializer && serializer[param]
-                ? serializer[param](splitPath[i])
-                : splitPath[i];
-        }
-        return acc;
-    }, {});
-};
-/**
- * @description: 使用查询字符串生成路径
- * @param {string} path 路径符串
- * @param {AnyObject} obj 条件对象
- * @return {string} generatePathQuery("/user", { name: "Orkhan", age: 30 });  // "/user?name=Orkhan&age=30"
- * @Date: 2021-02-01 11:43:34
- * @author: Pat
- */
-export function generatePathQuery(path: string, obj: AnyObject = {}): string {
-    if (!path) return path;
-    return path + Object.entries(obj).reduce((total: string, [k, v]) => (total += `${k}=${encodeURIComponent(v)}&`), "?").slice(0, -1);
-}
-/**
- * @description: 使用参数生成路径
- * @param {string} path
- * @param {AnyObject} obj
- * @return {string} generatePath("/app/:page/:id", { page: "products", id: 85, });  // "/app/products/85"
- * @Date: 2021-02-01 11:44:28
- * @author: Pat
- */
-export function generatePath(path: string, obj: AnyObject = {}): string {
-    if (!path) return path;
-    return path.replace(/(\:[a-z]+)/g, (v) => obj[v.substr(1)])
 };
 /**
  * @description: 距现在多少时间前
@@ -876,13 +632,6 @@ export function copyjs(dom: Element | string) {
  * @author: GGos
  */
 export const copyToClipboard = (text: string) => navigator.clipboard && navigator.clipboard.writeText && navigator.clipboard.writeText(text)
-/**
- * @description: 生成随机颜色
- * @return {string}
- * @Date: 2022-10-08 10:53:46
- * @author: GGos
- */
-export const generateRandomHexColor = (): string => `#${Math.floor(Math.random() * 0xffffff).toString(16)}`;
 
 /**
  * @description: 滚动到顶部/底部 ('top' | 'bottom',默认 top)
@@ -896,3 +645,5 @@ export const scrollTo = (element: Element | string, type: 'top' | 'bottom' = 'to
     if (!element) return false;
     element.scrollIntoView({ behavior: "smooth", block: type == 'top' ? "start" : 'end' })
 };
+
+export const trinityGrading = (str: string | number) => (isNumber(str) ? str.toString() : str)?.replace?.(/(?<=\d)(?=(\d{3})+(?!\d))/g, ',') || str;

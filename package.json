@@ -32,6 +32,7 @@
   "scripts": {
     "dev": "cross-env webpack serve --inline --progress --config build/dev.js --hot",
     "build:pro": "tsc && npm run publish",
+    "build:packages": "rollup -c build/rollup.js && npm run publish",
     "publish": "node build/publish.js"
   },
   "keywords": [],

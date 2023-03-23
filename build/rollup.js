@@ -14,7 +14,34 @@ import { resolve } from 'path'
 
 const input = resolve(__dirname, '../packages') // 入口文件
 const output = resolve(__dirname, '../lib') // 输出文件
-const configs = [];
+const configs = [{
+	input: `${input}/index.ts`,
+	plugins: [
+		nodeResolve(),
+		commonjs({
+			include: 'node_modules/**',
+			ignoreGlobal: true,
+			sourceMap: false,
+			namedExports: {},
+		}),
+		typescript({
+			tsconfigOverride: {
+				compilerOptions: {
+					declaration: false
+				},
+				exclude: ['node_modules', 'dist', 'lib']
+			},
+			abortOnError: false,
+			clean: true
+		})
+	],
+	output: {
+		name: 'index',
+		file: `${output}/index.js`,
+		format: 'es', //"amd", "cjs", "system", "es", "iife" or "umd"
+	}
+}
+];
 const readFields = (url) => {
 	readdirSync(`${input}/${url}`).filter(cname => !["dist"].includes(cname)).map(iname => {
 		if (iname.indexOf('.ts') > -1) {
@@ -50,7 +77,5 @@ const readFields = (url) => {
 		}
 	})
 };
-readdirSync(input).filter(name => !['index.ts', 'types.ts', "dist"].includes(name)).map(name => {
-	readFields(name);
-});
+readdirSync(input).filter(name => !['index.ts', 'types.ts', "dist"].includes(name)).map(name => readFields(name));
 export default configs;

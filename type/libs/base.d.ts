@@ -1,0 +1,27 @@
+export declare type TypeString = 'string' | 'number' | 'object' | 'symbol' | 'array' | 'function' | 'boolean';
+export declare const isArray: (arg: any) => arg is any[];
+export declare const isObject: (data: any) => data is {
+    [k: string]: any;
+};
+export declare function isJSONStr(str: string): str is string;
+export declare const isFunction: (data: any) => data is Function;
+export declare const isString: (data: any) => data is string;
+export declare const isNumber: (data: any) => data is number;
+export declare const isBoolean: (data: any) => data is boolean;
+export declare const isSymbol: (data: any) => data is Symbol;
+export declare const isBasicData: (data: any) => boolean;
+export declare const toLowerCase: (str: string) => string;
+export declare const toUpperCase: (str: string) => string;
+export declare const getType: (data: any) => TypeString;
+export declare const isType: (data: any, typeStr: TypeString | TypeString[]) => boolean;
+export declare const isEqual: (v1: any, v2: any) => boolean;
+export declare const isOdd: (num: number) => boolean;
+export declare const isBase64: (str: string) => boolean;
+export declare const isPicture: (picture: string) => boolean;
+export declare const isURL: (url: string) => boolean;
+export declare const isDevice: () => 'iOS' | 'Android' | 'WeChat' | 'Web';
+export declare const capitalUpperCase: (str: string) => string;
+export declare const capitalLowerCase: (str: string) => string;
+export declare const capitalUpperCaseAllLowerCase: (str: string) => string;
+export declare const toLowerCamelCase: (str: string) => string;
+export declare const toCamelCase: (str: string) => string;

@@ -1,4 +1,4 @@
-import { isArray, isNumber, isObject, isString } from "../common";
+import { isArray, isNumber, isObject, isString } from "../libs";
 import { assignValue, isIndex, toKey } from "./lib";
 export function setValue(
     data: { [k: string]: any } | any[],

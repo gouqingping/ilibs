@@ -6,10 +6,10 @@
  * @LastEditors  : GGos
  * @LastEditTime : 2022-10-10 14:11:23
  */
+export type TypeString = 'string' | 'number' | 'object' | 'symbol' | 'array' | 'function' | 'boolean';
 /**
  * @description: 验证是否为数组
  * @return {boolean}
- * @Date: 2022-10-08 11:37:09
  * @author: GGos
  */
 export const isArray = Array.isArray;
@@ -21,6 +21,22 @@ export const isArray = Array.isArray;
  * @author: GGos
  */
 export const isObject = (data: any): data is { [k: string]: any } => typeof data === 'object' && !isArray(data);
+/**
+ * @description: 检查字符串是否为json字符串
+ * @param {string} str
+ * @return {boolean}
+ * @Date: 2022-10-08 12:08:26
+ * @author: GGos
+ */
+export function isJSONStr(str: string): str is string {
+    if (str && isString(str)) {
+        try {
+            if (isObject(JSON.parse(str))) return true;
+            return false;
+        } catch (e) { return false; }
+    }
+    return false;
+};
 /**
  * @description: 验证数据是否为函数
  * @param {any} data
@@ -70,22 +86,6 @@ export const isSymbol = (data: any): data is Symbol => typeof data === 'symbol';
  */
 export const isBasicData = (data: any): boolean => (isString(data) || isNumber(data) || isSymbol(data) || isBoolean(data));
 /**
- * @description: 检查字符串是否为json字符串
- * @param {string} str
- * @return {boolean}
- * @Date: 2022-10-08 12:08:26
- * @author: GGos
- */
-export function isJSONStr(str: string): str is string {
-    if (str && isString(str)) {
-        try {
-            if (isObject(JSON.parse(str))) return true;
-            return false;
-        } catch (e) { return false; }
-    }
-    return false;
-};
-/**
  * @description: 全部转小写
  * @param {string} str
  * @return {string}
@@ -101,7 +101,6 @@ export const toLowerCase = (str: string): string => (str.toLowerCase());
  * @author: GGos
  */
 export const toUpperCase = (str: string): string => (str.toUpperCase());
-export type TypeString = 'string' | 'number' | 'object' | 'symbol' | 'array' | 'function' | 'boolean'
 /**
  * @description: 获取数据类型
  * @param {any} data
